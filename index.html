@@ -5,85 +5,50 @@
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <title>Mario</title>
-
-  <style>
-    html, body {
-      margin: 0;
-      background: black;
-      height: 100%;
-      overflow: hidden;
-      touch-action: none;
-    }
-    #game {
-      width: 100vw;
-      height: 100vh;
-    }
-    #overlay {
-      position: fixed;
-      inset: 0;
-      background: black;
-      color: white;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      cursor: pointer;
-    }
-  </style>
-
-  <script>
+    <script>
     // SNES no seu servidor
-    EJS_player        = "#game";
-    EJS_core          = "snes";
-    EJS_gameUrl       = "roms/smw.smc";
-    EJS_pathtodata    = "data/";
-    EJS_startOnLoaded = false;    // NÃO deixa ele iniciar sozinho
+    EJS_player = "#game";
+    EJS_core = "snes";
+    EJS_gameUrl = "roms/smw.smc"; // troque pelo nome certo
+    EJS_pathtodata = "data/";
+    EJS_startOnLoaded = true; // deixa o EmulatorJS mostrar o botão dele
     EJS_fullscreenOnLoaded = false;
   </script>
   <script src="data/loader.js"></script>
+ <style>
+html, body {
+  margin: 0;
+  background: black;
+  height: 100%;
+  overflow: hidden;
+}
+#game {
+  width: 100vw;
+  height: 100vh;
+}
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: black;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+</style>
 </head>
 <body>
-  <div id="overlay">▶ TOCAR PARA JOGAR</div>
-  <div id="game"></div>
-
-  <script>
-    const overlay = document.getElementById("overlay");
-
-    overlay.addEventListener("click", async () => {
-      // fullscreen
-      const el = document.documentElement;
-      if (el.requestFullscreen) {
-        try { await el.requestFullscreen(); } catch(e){ console.log(e); }
-      }
-
-      // remove SEU overlay
-      overlay.remove();
-
-      // remove overlay interno do EmulatorJS, se existir
-      try {
-        const ejsOverlay = document.querySelector(
-          ".EJS_startOverlay, .ejs-start-overlay, .ejs_overlay"
-        );
-        if (ejsOverlay) ejsOverlay.remove();
-      } catch(e) {
-        console.log(e);
-      }
-
-      // inicia o emulador manualmente
-      try {
-        if (window.EJS_start) {
-          window.EJS_start();
-        } else if (window.EJS_emulator && window.EJS_emulator.start) {
-          window.EJS_emulator.start();
-        }
-      } catch(e) {
-        console.log("Erro ao iniciar:", e);
-      }
-    });
-
-    // bloqueia scroll por gesto
-    window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-  </script>
+<div id="overlay">▶ TOCAR PARA JOGAR</div>
+<div id="game"></div>
+<script>
+document.getElementById("overlay").addEventListener("click", () => {
+  // gesto do usuário (obrigatório no Android)
+  document.getElementById("overlay").remove();
+  // fullscreen só após toque
+  document.documentElement.requestFullscreen?.();
+});
+</script>
 </body>
 </html>
